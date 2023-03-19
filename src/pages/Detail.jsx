@@ -1,14 +1,35 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+
+let Btn = styled.button`
+  background: ${(props) => props.bg};
+  color: ${(props) => (props.bg === 'blue' ? 'white' : 'black')};
+  padding: 10px;
+`;
+
+let NewBtn = styled.button(Btn)`
+
+`;
+
+let Box = styled.div`
+  background: grey;
+  padding: 20px;
+`;
 
 export default function Detail({ shoes }) {
   let { userid } = useParams();
   let findProduct = shoes.find((product) => {
     return product.id === Number(userid);
   });
-  console.log(findProduct);
+
   return findProduct ? (
     <div className='container'>
+      <Box>
+        <Btn bg='blue'>버튼</Btn>
+        <Btn bg='orange'>버튼</Btn>
+        <Btn bg='green'>버튼</Btn>
+      </Box>
       <div className='row'>
         <div className='col-md-6'>
           <img

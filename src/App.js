@@ -5,12 +5,15 @@ import './App.css';
 import bg from './img/bg.png';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import data from './data.js'
+import data from './data.js' //데이터 불러오기
+import ProductList from './components/ProductList.jsx'; // 외부 파일에 있는 컴포넌트 파일 불러오기
+import { useState } from 'react';
 
 function App() {
-  return (
 
-    // let [shoes] =useState();
+  let [shoes] = useState(data);
+
+  return (
 
     <div className="App">
 
@@ -31,24 +34,28 @@ function App() {
 
       <Container>
         <Row>
-          <Col>
-            <img src="https://codingapple1.github.io/shop/shoes1.jpg" width="80%" alt="" />
-            <h4>{data[0].title}</h4>
-            <p>{data[0].content}</p>
-            <p>{data[0].price}</p>
+          {/* <Col>
+            <ProductList shoes={shoes} index={0} src='https://codingapple1.github.io/shop/shoes1.jpg'></ProductList>
           </Col>
           <Col>
-            <img src="https://codingapple1.github.io/shop/shoes2.jpg" width="80%" alt="" />
-            <h4>{data[1].title}</h4>
-            <p>{data[1].content}</p>
-            <p>{data[1].price}</p>
+            <ProductList shoes={shoes} index={1} src='https://codingapple1.github.io/shop/shoes2.jpg'></ProductList>
           </Col>
           <Col>
-            <img src="https://codingapple1.github.io/shop/shoes3.jpg" width="80%" alt="" />
-            <h4>{data[2].title}</h4>
-            <p>{data[2].content}</p>
-            <p>{data[2].price}</p>
-          </Col>
+            <ProductList shoes={shoes} index={2} src='https://codingapple1.github.io/shop/shoes3.jpg'></ProductList>
+          </Col> */}
+
+          {
+            shoes.map((item, i) => {
+              return (
+                <Col>
+                  <ProductList shoes={shoes} index={i} src={'https://codingapple1.github.io/shop/shoes' + (i + 1) + '.jpg'}></ProductList>
+                </Col>
+              )
+            })
+          }
+          {/* map함수로 컴포넌트 중복 제거 */}
+
+
         </Row>
       </Container>
 

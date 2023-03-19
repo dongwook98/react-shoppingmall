@@ -48,7 +48,8 @@ function App() {
             shoes.map((item, i) => {
               return (
                 <Col>
-                  <ProductList shoes={shoes} index={i} src={'https://codingapple1.github.io/shop/shoes' + (i + 1) + '.jpg'}></ProductList>
+                  <ProductList shoes={shoes[i]} num={i}></ProductList>
+                  {/* shoes[i] : shoes 데이터를 다 전달하는게 아니라 한개씩 전달 */}
                 </Col>
               )
             })

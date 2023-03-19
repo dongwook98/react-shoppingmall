@@ -43,3 +43,9 @@
   background-size: cover;
   background-position: center;
 }
+
+.link {
+  color: whitesmoke;
+  margin-left: 30px;
+  text-decoration: none;
+}

@@ -12,7 +12,7 @@ import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom'
 import Detail from './pages/Detail';
 import Cart from './pages/Cart';
 import About from './pages/About';
-import EventPage from './pages/Event';
+import EventPage from './pages/EventPage';
 
 function App() {
 
@@ -29,6 +29,7 @@ function App() {
             <Link to="/about" className='link'>회사 소개</Link>
             <Link to="/detail" className='link'>상세 페이지</Link>
             <Link to="/cart" className='link'>장바구니</Link>
+            <Link to="/event" className='link'>이벤트</Link>
 
             {/* <Nav.Link onClick={() => navigate('/')}>Home</Nav.Link>
             <Nav.Link onClick={() => navigate('/detail')}>Detail</Nav.Link>
@@ -47,7 +48,7 @@ function App() {
               {
                 shoes.map((item, i) => {
                   return (
-                    <Col>
+                    <Col key={i}>
                       <ProductList shoes={shoes[i]} num={i}></ProductList>
                       {/* shoes[i] : shoes 데이터를 다 전달하는게 아니라 한개씩 전달 */}
                     </Col>
@@ -59,6 +60,7 @@ function App() {
           </Container>
         }></Route>
         <Route path='/detail/:userid' element={<Detail shoes={shoes}></Detail>} />
+        <Route path='/detail' element={<Detail shoes={shoes}></Detail>} />
         <Route path='/cart' element={<Cart></Cart>} />
         <Route path='*' element={<div>없는페이지요</div>} />
         <Route path='/about' element={<About></About>} >

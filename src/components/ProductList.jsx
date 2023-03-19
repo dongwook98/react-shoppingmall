@@ -9,7 +9,6 @@ export default function ProductList({ shoes, num }) {
         alt=''
       />
       <h4>{shoes.title}</h4>
-      <p>{shoes.content}</p>
       <p>{shoes.price}</p>
     </div>
   );

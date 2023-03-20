@@ -31,10 +31,10 @@ function App() {
             <Link to="/cart" className='link'>장바구니</Link>
             <Link to="/event" className='link'>이벤트</Link>
 
-            {/* <Nav.Link onClick={() => navigate('/')}>Home</Nav.Link>
-            <Nav.Link onClick={() => navigate('/detail')}>Detail</Nav.Link>
-            <Nav.Link onClick={() => navigate(1)}>앞으로 가기</Nav.Link>
-            <Nav.Link onClick={() => navigate(-1)}>뒤로 가기</Nav.Link> */}
+            {/* <Nav.Link className='link' onClick={() => navigate('/')}>Home</Nav.Link>
+            <Nav.Link className='link' onClick={() => navigate('/detail')}>Detail</Nav.Link>
+            <Nav.Link className='link' onClick={() => navigate(1)}>앞으로 가기</Nav.Link>
+            <Nav.Link className='link' onClick={() => navigate(-1)}>뒤로 가기</Nav.Link> */}
           </Nav>
         </Container>
       </Navbar>
@@ -58,7 +58,8 @@ function App() {
               {/* map함수로 컴포넌트 중복 제거 */}
             </Row>
           </Container>
-        }></Route>
+        }>
+        </Route>
         <Route path='/detail/:userid' element={<Detail shoes={shoes}></Detail>} />
         <Route path='/detail' element={<Detail shoes={shoes}></Detail>} />
         <Route path='/cart' element={<Cart></Cart>} />

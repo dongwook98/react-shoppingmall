@@ -16,33 +16,55 @@ let Box = styled.div`
   padding: 20px;
 `;
 
-// 컴포넌트의 Lifecycle
-// 1. 페이지에 장착되기도 하고(mount)
-// 2. 가끔 업데이트도 되고 (update)
-// 3. 필요없으면 제거되고 (unmount)
-
 export default function Detail({ shoes }) {
-  useEffect(() => {
-    // mount, update시 코드 실행해주는 useEffect
-    console.log('안녕');
-    // for (let i = 0; i < 10000; i++) {
-    //   console.log(1);
-    // } // useEffect 사용하면 HTML렌더링 후에 실행됨!
-    setTimeout(() => {
-      setBoxShow(false);
-    }, 2000);
+  let [boxShow, setBoxShow] = useState(true);
+  let [count, setCount] = useState(0);
+  let [count2, setCount2] = useState(0);
+  let { userid } = useParams();
+  let findProduct = shoes.find((product) => {
+    return product.id === Number(userid);
   });
+  let [numInput, setNumInput] = useState('');
+
+  useEffect(() => {
+    if (isNaN(numInput) === true) {
+      // 문자입력시 실행
+      alert('숫자만 입력하세요.');
+    }
+  }, [numInput]);
+
+  // 컴포넌트의 Lifecycle
+  // 1. 페이지에 장착되기도 하고(mount)
+  // 2. 가끔 업데이트도 되고 (update)
+  // 3. 필요없으면 제거되고 (unmount)
 
   // for (let i = 0; i < 10000; i++) {
   //   console.log(1);
   // } // useEffect 사용하지않으면 HTML렌더링 전에 실행됨!
 
-  let [boxShow, setBoxShow] = useState(true);
-  let [count, setCount] = useState(0);
-  let { userid } = useParams();
-  let findProduct = shoes.find((product) => {
-    return product.id === Number(userid);
-  });
+  useEffect(() => {
+    // mount, update시 코드 실행해주는 useEffect
+    console.log('useEffect실행됨');
+
+    // for (let i = 0; i < 10000; i++) {
+    //   console.log(1);
+    // } // useEffect 사용하면 HTML렌더링 후에 실행됨!
+
+    let a = setTimeout(() => {
+      // 문제1. 2초사이에 재렌더링 발생하면 타이머가 무수히 많이 생김
+      setBoxShow(false);
+    }, 2000);
+
+    // 문제2. 만약 서버로 데이터 요청하는 코드가 있고 2초 정도 소요한다고 가정한다면 그 사이에 재렌더링이 발생하면 버그가 많이 발생함
+
+    return () => {
+      // useEffect 동작 전에 실행되는 코드~~
+      // 문제1 해결. 기존타이머는 제거해주세요~~
+      clearTimeout(a);
+
+      // 문제2 해결. 기존 데이터요청은 제거해주세요~~
+    };
+  }, []);
 
   if (userid) {
     return findProduct ? (
@@ -54,6 +76,14 @@ export default function Detail({ shoes }) {
           }}
         >
           버튼
+        </button>
+        {count2}
+        <button
+          onClick={() => {
+            setCount2(count2 + 1);
+          }}
+        >
+          버튼2
         </button>
         {boxShow ? (
           <div className='alert alert-warning'>2초이내 구매시 할인</div>
@@ -75,6 +105,12 @@ export default function Detail({ shoes }) {
             />
           </div>
           <div className='col-md-6'>
+            <input
+              type='text'
+              onChange={(e) => {
+                setNumInput(e.target.value);
+              }}
+            />
             <h4 className='pt-5'>{findProduct.title}</h4>
             <p>{findProduct.content}</p>
             <p>{findProduct.price}</p>

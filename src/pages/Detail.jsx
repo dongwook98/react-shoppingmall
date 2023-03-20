@@ -25,11 +25,19 @@ export default function Detail({ shoes }) {
   useEffect(() => {
     // mount, update시 코드 실행해주는 useEffect
     console.log('안녕');
-    for (let i = 0; i < 10000; i++) {
-      console.log(1);
-    } // useEffect 사용하면 HTML렌더링 후에 실행됨!
+    // for (let i = 0; i < 10000; i++) {
+    //   console.log(1);
+    // } // useEffect 사용하면 HTML렌더링 후에 실행됨!
+    setTimeout(() => {
+      setBoxShow(false);
+    }, 2000);
   });
 
+  // for (let i = 0; i < 10000; i++) {
+  //   console.log(1);
+  // } // useEffect 사용하지않으면 HTML렌더링 전에 실행됨!
+
+  let [boxShow, setBoxShow] = useState(true);
   let [count, setCount] = useState(0);
   let { userid } = useParams();
   let findProduct = shoes.find((product) => {
@@ -47,7 +55,9 @@ export default function Detail({ shoes }) {
         >
           버튼
         </button>
-        <div className='alert alert-warning'>2초이내 구매시 할인</div>
+        {boxShow ? (
+          <div className='alert alert-warning'>2초이내 구매시 할인</div>
+        ) : null}
         <Box>
           <Btn bg='blue'>버튼</Btn>
           <Btn bg='orange'>버튼</Btn>

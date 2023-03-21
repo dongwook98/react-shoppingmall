@@ -6,8 +6,7 @@ import Col from 'react-bootstrap/Col';
 
 let Btn = styled.button`
   background: ${(props) => props.bg};
-  color: ${(props) => (props.bg === 'rgb(37,91,247)' ? 'white' : 'black')};
-  text-decoration: none;
+  color: ${(props) => (props.bg === 'blue' ? 'white' : 'black')};
   padding: 10px;
 `;
 
@@ -58,13 +57,12 @@ export default function Detail({ shoes }) {
     // 문제2. 만약 서버로 데이터 요청하는 코드가 있고 2초 정도 소요한다고 가정한다면 그 사이에 재렌더링이 발생하면 버그가 많이 발생함
 
     return () => {
-      // useEffect 동작 전에 실행되는 코드~~
       // 문제1 해결. 기존타이머는 제거해주세요~~
       clearTimeout(a);
 
       // 문제2 해결. 기존 데이터요청은 제거해주세요~~
     };
-  }, []);
+  }, [count]);
 
   if (userid) {
     return findProduct ? (
@@ -75,7 +73,7 @@ export default function Detail({ shoes }) {
             setCount(count + 1);
           }}
         >
-          버튼
+          useEffect 실행되는 버튼
         </button>
         {count2}
         <button
@@ -83,14 +81,14 @@ export default function Detail({ shoes }) {
             setCount2(count2 + 1);
           }}
         >
-          버튼2
+          useEffect 실행되지않는 버튼
         </button>
         {boxShow ? (
           <div className='alert alert-warning'>2초이내 구매시 할인</div>
         ) : null}
         <Box>
-          <Btn bg='blue'>버튼</Btn>
-          <Btn bg='orange'>버튼</Btn>
+          <Btn bg='blue'>스타일드컴포넌트</Btn>
+          <Btn bg='orange'>로 만든</Btn>
           <Btn bg='green'>버튼</Btn>
         </Box>
         <div className='row'>
@@ -133,12 +131,12 @@ export default function Detail({ shoes }) {
           <Col key={i}>
             <ProductList shoes={shoes[i]} num={i}></ProductList>
             {/* shoes[i] : shoes 데이터를 다 전달하는게 아니라 한개씩 전달 */}
-            <Btn bg='rgb(37,91,247)'>
+            <Btn bg='#2576f7'>
               <Link
                 style={{ textDecorationLine: 'none', color: 'white' }}
                 to={'/detail/' + i}
               >
-                <span>자세히 보기</span>
+                자세히 보기
               </Link>
             </Btn>
           </Col>

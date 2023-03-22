@@ -1,16 +1,5 @@
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-
-let user = createSlice({
-  name: 'user',
-  initialState: 'kim',
-  reducers: {
-    changeName(state) {
-      return 'john ' + state;
-    }, // 1. state수정해주는 함수만들기
-  },
-});
-
-export let { changeName } = user.actions; // 2. 만든 함수 export 해야함
+import user from './store/userSlice.js';
 
 let cartData = createSlice({
   name: 'cartData',

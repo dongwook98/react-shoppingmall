@@ -3,12 +3,14 @@ import { configureStore, createSlice } from '@reduxjs/toolkit';
 let user = createSlice({
   name: 'user',
   initialState: 'kim',
+  reducers: {
+    changeName(state) {
+      return 'john ' + state;
+    }, // 1. state수정해주는 함수만들기
+  },
 });
 
-let stock = createSlice({
-  name: 'stock',
-  initialState: [10, 11, 12],
-});
+export let { changeName } = user.actions; // 2. 만든 함수 export 해야함
 
 let cartData = createSlice({
   name: 'cartData',
@@ -21,7 +23,6 @@ let cartData = createSlice({
 export default configureStore({
   reducer: {
     user: user.reducer,
-    stock: stock.reducer,
     cartData: cartData.reducer,
   },
 });

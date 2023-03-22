@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductList from '../components/ProductList';
 import Col from 'react-bootstrap/Col';
 import { Nav } from 'react-bootstrap';
+import { Context1 } from './../App.js';
 
 let Btn = styled.button`
   background: ${(props) => props.bg};
@@ -17,6 +18,8 @@ let Box = styled.div`
 `;
 
 export default function Detail({ shoes }) {
+  let { 재고 } = useContext(Context1);
+
   let [boxShow, setBoxShow] = useState(true);
   let [count, setCount] = useState(0);
   let [count2, setCount2] = useState(0);
@@ -26,6 +29,7 @@ export default function Detail({ shoes }) {
   });
   let [numInput, setNumInput] = useState('');
   let [tap, setTap] = useState(0);
+  let [fade, setFade] = useState('');
 
   useEffect(() => {
     if (isNaN(numInput) === true) {
@@ -34,6 +38,16 @@ export default function Detail({ shoes }) {
     }
   }, [numInput]);
 
+  useEffect(() => {
+    let a = setTimeout(() => {
+      setFade('end');
+    }, 100);
+
+    return () => {
+      setFade('');
+      clearTimeout(a);
+    };
+  }, []);
   // 컴포넌트의 Lifecycle
   // 1. 페이지에 장착되기도 하고(mount)
   // 2. 가끔 업데이트도 되고 (update)
@@ -93,6 +107,7 @@ export default function Detail({ shoes }) {
           <Btn bg='orange'>로 만든</Btn>
           <Btn bg='green'>버튼</Btn>
         </Box>
+        {재고}
         <div className='row'>
           <div className='col-md-6'>
             <img
@@ -160,7 +175,7 @@ export default function Detail({ shoes }) {
   }
 
   return (
-    <div>
+    <div className={'start ' + fade}>
       <h2>제품 상세페이지입니다.</h2>
       {shoes.map((item, i) => {
         return (
@@ -184,6 +199,7 @@ export default function Detail({ shoes }) {
 
 function TapContent({ tap }) {
   let [fade, setFade] = useState('');
+  let { 재고 } = useContext(Context1);
 
   useEffect(() => {
     setTimeout(() => {
@@ -207,7 +223,7 @@ function TapContent({ tap }) {
   // }
   return (
     <div className={'start ' + fade}>
-      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tap]}
+      {[<div>{재고}</div>, <div>내용1</div>, <div>내용2</div>][tap]}
     </div>
   );
 }

@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import data from './data.js'; //데이터 불러오기
 import ProductList from './components/ProductList.jsx'; // 외부 파일에 있는 컴포넌트 파일 불러오기
-import { useState } from 'react';
+import { useState, useEffect, createContext } from 'react';
 import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom';
 import Detail from './pages/Detail';
 import Cart from './pages/Cart';
@@ -15,11 +15,14 @@ import About from './pages/About';
 import EventPage from './pages/EventPage';
 import axios from 'axios';
 
+export let Context1 = createContext(); // state보관함
+
 let moreBtnCount = 1; // App 컴포넌트 안에넣으면 재렌더링 될때마다 moreBtnCount가 1로 초기화됨...!!!!
 
 function App() {
   let [shoes, setShoes] = useState(data);
   let [loading, setLoading] = useState(false);
+  let [재고] = useState([10, 11, 12]); // Detail, TabContent에서 쓰고싶다고 가정(props쓰면 되겠지만 ContextAPI 사용)
   // let navigate = useNavigate();
 
   return (
@@ -134,7 +137,11 @@ function App() {
         ></Route>
         <Route
           path='/detail/:userid'
-          element={<Detail shoes={shoes}></Detail>}
+          element={
+            <Context1.Provider value={{ 재고 }}>
+              <Detail shoes={shoes}></Detail>
+            </Context1.Provider>
+          }
         />
         <Route path='/detail' element={<Detail shoes={shoes}></Detail>} />
         <Route path='/cart' element={<Cart></Cart>} />

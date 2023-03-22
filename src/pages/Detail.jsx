@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import ProductList from '../components/ProductList';
 import Col from 'react-bootstrap/Col';
+import { Nav } from 'react-bootstrap';
 
 let Btn = styled.button`
   background: ${(props) => props.bg};
@@ -24,6 +25,7 @@ export default function Detail({ shoes }) {
     return product.id === Number(userid);
   });
   let [numInput, setNumInput] = useState('');
+  let [tap, setTap] = useState(0);
 
   useEffect(() => {
     if (isNaN(numInput) === true) {
@@ -39,10 +41,10 @@ export default function Detail({ shoes }) {
 
   // for (let i = 0; i < 10000; i++) {
   //   console.log(1);
-  // } // useEffect 사용하지않으면 HTML렌더링 전에 실행됨!
+  // } // useEffect 사용하지않으면 HTML렌더링 전에 실행됨! => 매우 복잡하고 어려운 오래걸리는 연산이 있을경우에는 html 렌더링이 느리게 되게 된다.
 
   useEffect(() => {
-    // mount, update시 코드 실행해주는 useEffect
+    // 컴포넌트 mount, update시 코드 실행해주는 useEffect
     console.log('useEffect실행됨');
 
     // for (let i = 0; i < 10000; i++) {
@@ -115,6 +117,40 @@ export default function Detail({ shoes }) {
             <button className='btn btn-danger'>주문하기</button>
           </div>
         </div>
+
+        <Nav variant='tabs' defaultActiveKey='link0'>
+          <Nav.Item>
+            <Nav.Link
+              onClick={() => {
+                setTap(0);
+              }}
+              eventKey='link0'
+            >
+              버튼0
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              onClick={() => {
+                setTap(1);
+              }}
+              eventKey='link1'
+            >
+              버튼1
+            </Nav.Link>
+          </Nav.Item>
+          <Nav.Item>
+            <Nav.Link
+              onClick={() => {
+                setTap(2);
+              }}
+              eventKey='link2'
+            >
+              버튼2
+            </Nav.Link>
+          </Nav.Item>
+        </Nav>
+        <TapContent tap={tap}></TapContent>
       </div>
     ) : (
       <div>
@@ -142,6 +178,36 @@ export default function Detail({ shoes }) {
           </Col>
         );
       })}
+    </div>
+  );
+}
+
+function TapContent({ tap }) {
+  let [fade, setFade] = useState('');
+
+  useEffect(() => {
+    setTimeout(() => {
+      // flushSync() 써도 automatic batching 막아줌
+      setFade('end');
+    }, 10);
+
+    return () => {
+      setFade('');
+    };
+  }, [tap]); // tap state를 받아와서 tap state가 변경될때마다 애니메이션 효과주면 됨!!
+
+  // if (tap === 0) {
+  //   return <div>내용0</div>;
+  // }
+  // if (tap === 1) {
+  //   return <div>내용1</div>;
+  // }
+  // if (tap === 2) {
+  //   return <div>내용2</div>;
+  // }
+  return (
+    <div className={'start ' + fade}>
+      {[<div>내용0</div>, <div>내용1</div>, <div>내용2</div>][tap]}
     </div>
   );
 }

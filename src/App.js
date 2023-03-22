@@ -83,7 +83,7 @@ function App() {
                   로딩중...
                 </div>
               ) : null}
-              {console.log(moreBtnCount)}
+
               <button
                 onClick={() => {
                   moreBtnCount = moreBtnCount + 1;

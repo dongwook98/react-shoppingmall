@@ -14,10 +14,26 @@ let cartData = createSlice({
       });
       finded.count += 1;
     },
+    addItem(state, action) {
+      let findedIndex = state.findIndex(
+        (item, i) => item.id === action.payload.id
+      );
+      if (findedIndex >= 0) {
+        state[findedIndex].count += 1;
+      } else {
+        state.push(action.payload);
+      }
+    },
+    removeItem(state, action) {
+      let findedIndex = state.findIndex((item, i) => {
+        return item.id === action.payload;
+      });
+      state.splice(findedIndex, 1);
+    },
   },
 });
 
-export let { upCount } = cartData.actions;
+export let { upCount, addItem, removeItem } = cartData.actions;
 
 export default configureStore({
   reducer: {

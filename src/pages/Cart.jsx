@@ -1,8 +1,9 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeName, upAge } from './../store/userSlice.js';
+import { upAge } from './../store/userSlice.js';
 import { upCount } from './../store.js';
+import { removeItem } from './../store.js';
 
 export default function Cart() {
   let state = useSelector((state) => state);
@@ -42,6 +43,13 @@ export default function Cart() {
                     }}
                   >
                     +
+                  </button>
+                  <button
+                    onClick={() => {
+                      dispatch(removeItem(state.cartData[i].id));
+                    }}
+                  >
+                    삭제
                   </button>
                 </td>
               </tr>

@@ -20,6 +20,9 @@ export let Context1 = createContext(); // state보관함
 let moreBtnCount = 1; // App 컴포넌트 안에넣으면 재렌더링 될때마다 moreBtnCount가 1로 초기화됨...!!!!
 
 function App() {
+  useEffect(() => {
+    localStorage.setItem('watched', JSON.stringify([]));
+  }, []);
   let [shoes, setShoes] = useState(data);
   let [loading, setLoading] = useState(false);
   let [재고] = useState([10, 11, 12]); // Detail, TabContent에서 쓰고싶다고 가정(props쓰면 되겠지만 ContextAPI 사용)
@@ -87,9 +90,7 @@ function App() {
               <button
                 onClick={() => {
                   moreBtnCount = moreBtnCount + 1;
-                  // 로딩중UI 띄우기~
                   setLoading(true);
-                  // axios는 외부라이브러리라 npm install axios 하고 위에 import
                   if (moreBtnCount === 2) {
                     axios
                       .get('https://codingapple1.github.io/shop/data2.json')
@@ -143,7 +144,15 @@ function App() {
             </Context1.Provider>
           }
         />
-        <Route path='/detail' element={<Detail shoes={shoes}></Detail>} />
+
+        <Route
+          path='/detail'
+          element={
+            <Context1.Provider value={{ 재고 }}>
+              <Detail shoes={shoes}></Detail>
+            </Context1.Provider>
+          }
+        />
         <Route path='/cart' element={<Cart></Cart>} />
         <Route path='*' element={<div>없는페이지요</div>} />
         <Route path='/about' element={<About></About>}>

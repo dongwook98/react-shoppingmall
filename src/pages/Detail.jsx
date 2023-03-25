@@ -5,6 +5,9 @@ import ProductList from '../components/ProductList';
 import Col from 'react-bootstrap/Col';
 import { Nav } from 'react-bootstrap';
 import { Context1 } from './../App.js';
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem } from '../store';
+import { useNavigate } from 'react-router-dom';
 
 let Btn = styled.button`
   background: ${(props) => props.bg};
@@ -18,11 +21,12 @@ let Box = styled.div`
 `;
 
 export default function Detail({ shoes }) {
+  let navigate = useNavigate();
+  let dispatch = useDispatch();
   let { 재고 } = useContext(Context1);
 
   let [boxShow, setBoxShow] = useState(true);
   let [count, setCount] = useState(0);
-  let [count2, setCount2] = useState(0);
   let { userid } = useParams();
   let findProduct = shoes.find((product) => {
     return product.id === Number(userid);
@@ -80,34 +84,26 @@ export default function Detail({ shoes }) {
     };
   }, [count]);
 
-  if (userid) {
-    return findProduct ? (
+  if (findProduct) {
+    return (
       <div className='container'>
-        {count}
+        {/* {count}
         <button
           onClick={() => {
             setCount(count + 1);
           }}
         >
           useEffect 실행되는 버튼
-        </button>
-        {count2}
-        <button
-          onClick={() => {
-            setCount2(count2 + 1);
-          }}
-        >
-          useEffect 실행되지않는 버튼
-        </button>
+        </button> */}
         {boxShow ? (
           <div className='alert alert-warning'>2초이내 구매시 할인</div>
         ) : null}
-        <Box>
+        {/* <Box>
           <Btn bg='blue'>스타일드컴포넌트</Btn>
           <Btn bg='orange'>로 만든</Btn>
           <Btn bg='green'>버튼</Btn>
-        </Box>
-        {재고}
+        </Box> */}
+        {/* {재고} */}
         <div className='row'>
           <div className='col-md-6'>
             <img
@@ -129,7 +125,22 @@ export default function Detail({ shoes }) {
             <h4 className='pt-5'>{findProduct.title}</h4>
             <p>{findProduct.content}</p>
             <p>{findProduct.price}</p>
-            <button className='btn btn-danger'>주문하기</button>
+
+            <button
+              className='btn btn-danger'
+              onClick={() => {
+                dispatch(
+                  addItem({
+                    id: findProduct.id,
+                    name: findProduct.title,
+                    count: 1,
+                  })
+                );
+                navigate('/cart');
+              }}
+            >
+              주문하기
+            </button>
           </div>
         </div>
 
@@ -167,7 +178,11 @@ export default function Detail({ shoes }) {
         </Nav>
         <TapContent tap={tap}></TapContent>
       </div>
-    ) : (
+    );
+  }
+
+  if (findProduct === false) {
+    return (
       <div>
         <div>찾으시는 상품이없습니다.</div>
       </div>

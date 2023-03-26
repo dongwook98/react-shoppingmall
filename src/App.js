@@ -21,12 +21,16 @@ let moreBtnCount = 1; // App 컴포넌트 안에넣으면 재렌더링 될때마
 
 function App() {
   useEffect(() => {
-    localStorage.setItem('watched', JSON.stringify([]));
+    if (localStorage.length === 0) {
+      // 로컬 스토리지가 비어있는 경우 실행할 코드
+      localStorage.setItem('watched', JSON.stringify([]));
+    }
   }, []);
+
   let [shoes, setShoes] = useState(data);
   let [loading, setLoading] = useState(false);
   let [재고] = useState([10, 11, 12]); // Detail, TabContent에서 쓰고싶다고 가정(props쓰면 되겠지만 ContextAPI 사용)
-  // let navigate = useNavigate();
+  let navigate = useNavigate();
 
   return (
     <div className='App'>
@@ -40,7 +44,7 @@ function App() {
             <Link to='/about' className='link'>
               회사 소개
             </Link>
-            <Link to='/detail' className='link'>
+            <Link to='/detail/0' className='link'>
               상세 페이지
             </Link>
             <Link to='/cart' className='link'>
@@ -67,12 +71,42 @@ function App() {
               <Row>
                 <div
                   className='main-bg'
-                  style={{ backgroundImage: 'url(' + bg + ')' }}
+                  style={{
+                    backgroundImage: 'url(' + bg + ')',
+                    display: 'inline',
+                  }}
                 ></div>
+                <div className='sideBanner'>
+                  최근 본 상품
+                  {shoes.map((item, i) => {
+                    if (!(localStorage.length === 0)) {
+                      if (
+                        JSON.parse(localStorage.getItem('watched')).includes(
+                          item.id
+                        )
+                      ) {
+                        return (
+                          <div key={i}>
+                            <img
+                              src={
+                                'https://codingapple1.github.io/shop/shoes' +
+                                (i + 1) +
+                                '.jpg'
+                              }
+                              alt=''
+                              width={'70px'}
+                            />
+                            <div>{item.title}</div>
+                          </div>
+                        );
+                      }
+                    }
+                  })}
+                </div>
 
                 {shoes.map((item, i) => {
                   return (
-                    <Col md={4} key={i}>
+                    <Col md={3} key={i}>
                       <ProductList shoes={shoes[i]} num={i}></ProductList>
                       {/* shoes[i] : shoes 데이터를 다 전달하는게 아니라 한개씩 전달 */}
                     </Col>
@@ -82,7 +116,7 @@ function App() {
               </Row>
 
               {loading ? (
-                <div style={{ background: 'red', color: 'white' }}>
+                <div style={{ background: 'skyblue', color: 'white' }}>
                   로딩중...
                 </div>
               ) : null}
@@ -131,7 +165,7 @@ function App() {
                   }
                 }}
               >
-                더보기 버튼
+                더보기
               </button>
             </Container>
           }
@@ -145,14 +179,6 @@ function App() {
           }
         />
 
-        <Route
-          path='/detail'
-          element={
-            <Context1.Provider value={{ 재고 }}>
-              <Detail shoes={shoes}></Detail>
-            </Context1.Provider>
-          }
-        />
         <Route path='/cart' element={<Cart></Cart>} />
         <Route path='*' element={<div>없는페이지요</div>} />
         <Route path='/about' element={<About></About>}>

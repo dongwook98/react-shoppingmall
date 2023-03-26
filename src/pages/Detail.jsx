@@ -9,31 +9,33 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addItem } from '../store';
 import { useNavigate } from 'react-router-dom';
 
-let Btn = styled.button`
-  background: ${(props) => props.bg};
-  color: ${(props) => (props.bg === 'blue' ? 'white' : 'black')};
-  padding: 10px;
-`;
+// ! 스타일 컴포넌트 학습한 부분!
+// let Btn = styled(Link)`
+//   background: ${(props) => props.bg};
+//   color: ${(props) => (props.bg === 'blue' ? 'white' : 'black')};
+//   padding: 10px;
+//   display: inline-block;
+// `;
 
-let Box = styled.div`
-  background: grey;
-  padding: 20px;
-`;
+// let Box = styled.div`
+//   background: grey;
+//   padding: 20px;
+// `;
 
 export default function Detail({ shoes }) {
   let navigate = useNavigate();
   let dispatch = useDispatch();
-  let { 재고 } = useContext(Context1);
+  // let { 재고 } = useContext(Context1);
 
   let [boxShow, setBoxShow] = useState(true);
   let [count, setCount] = useState(0);
-  let { userid } = useParams();
-  let findProduct = shoes.find((product) => {
-    return product.id === Number(userid);
-  });
+  let { userid } = useParams(); // 유저가 url path에 입력한 값
+  let findProduct = shoes.find((product) => product.id == userid); // 유저가 path에 입력한 상품을 찾음
   let [numInput, setNumInput] = useState('');
-  let [tap, setTap] = useState(0);
-  let [fade, setFade] = useState('');
+  let [tap, setTap] = useState(0); // Tap UI 의 상태 저장
+  let [fade2, setFade2] = useState('');
+  console.log(findProduct);
+  console.log('userid', userid);
 
   useEffect(() => {
     if (isNaN(numInput) === true) {
@@ -44,30 +46,18 @@ export default function Detail({ shoes }) {
 
   useEffect(() => {
     let a = setTimeout(() => {
-      setFade('end');
+      setFade2('end');
     }, 100);
 
     return () => {
-      setFade('');
+      setFade2('');
       clearTimeout(a);
     };
   }, []);
-  // 컴포넌트의 Lifecycle
-  // 1. 페이지에 장착되기도 하고(mount)
-  // 2. 가끔 업데이트도 되고 (update)
-  // 3. 필요없으면 제거되고 (unmount)
-
-  // for (let i = 0; i < 10000; i++) {
-  //   console.log(1);
-  // } // useEffect 사용하지않으면 HTML렌더링 전에 실행됨! => 매우 복잡하고 어려운 오래걸리는 연산이 있을경우에는 html 렌더링이 느리게 되게 된다.
 
   useEffect(() => {
     // 컴포넌트 mount, update시 코드 실행해주는 useEffect
     console.log('useEffect실행됨');
-
-    // for (let i = 0; i < 10000; i++) {
-    //   console.log(1);
-    // } // useEffect 사용하면 HTML렌더링 후에 실행됨!
 
     let a = setTimeout(() => {
       // 문제1. 2초사이에 재렌더링 발생하면 타이머가 무수히 많이 생김
@@ -84,10 +74,22 @@ export default function Detail({ shoes }) {
     };
   }, [count]);
 
-  if (findProduct) {
-    return (
-      <div className='container'>
-        {/* {count}
+  useEffect(() => {
+    // 누가 Detail 페이지 접속하면
+    // 그페이지에 보이는 상품id를 가져와서
+    // localStrage에 watched 항목에 추가
+    let 꺼낸거 = localStorage.getItem('watched');
+    꺼낸거 = JSON.parse(꺼낸거);
+    // 이미 있으면 push 하지마라 if문 사용해도 되지만 Set자료형 사용
+    꺼낸거.push(findProduct.id);
+    꺼낸거 = new Set(꺼낸거);
+    꺼낸거 = Array.from(꺼낸거);
+    localStorage.setItem('watched', JSON.stringify(꺼낸거));
+  }, []);
+
+  return (
+    <div className={'container start ' + fade2}>
+      {/* {count}
         <button
           onClick={() => {
             setCount(count + 1);
@@ -95,119 +97,98 @@ export default function Detail({ shoes }) {
         >
           useEffect 실행되는 버튼
         </button> */}
-        {boxShow ? (
-          <div className='alert alert-warning'>2초이내 구매시 할인</div>
-        ) : null}
-        {/* <Box>
+      {boxShow ? (
+        <div className='alert alert-warning'>2초이내 구매시 할인</div>
+      ) : null}
+      {/* <Box>
           <Btn bg='blue'>스타일드컴포넌트</Btn>
           <Btn bg='orange'>로 만든</Btn>
           <Btn bg='green'>버튼</Btn>
         </Box> */}
-        {/* {재고} */}
-        <div className='row'>
-          <div className='col-md-6'>
-            <img
-              src={
-                'https://codingapple1.github.io/shop/shoes' +
-                (findProduct.id + 1) +
-                '.jpg'
-              }
-              width='100%'
-            />
-          </div>
-          <div className='col-md-6'>
-            <input
-              type='text'
-              onChange={(e) => {
-                setNumInput(e.target.value);
-              }}
-            />
-            <h4 className='pt-5'>{findProduct.title}</h4>
-            <p>{findProduct.content}</p>
-            <p>{findProduct.price}</p>
-
-            <button
-              className='btn btn-danger'
-              onClick={() => {
-                dispatch(
-                  addItem({
-                    id: findProduct.id,
-                    name: findProduct.title,
-                    count: 1,
-                  })
-                );
-                navigate('/cart');
-              }}
-            >
-              주문하기
-            </button>
-          </div>
+      {/* {재고} */}
+      <div className='row'>
+        <div className='col-md-6'>
+          <img
+            src={
+              'https://codingapple1.github.io/shop/shoes' +
+              (findProduct.id + 1) +
+              '.jpg'
+            }
+            width='100%'
+          />
         </div>
+        <div className='col-md-6'>
+          <input
+            type='text'
+            onChange={(e) => {
+              setNumInput(e.target.value);
+            }}
+          />
+          <h4 className='pt-5'>{findProduct.title}</h4>
+          <p>{findProduct.content}</p>
+          <p>{findProduct.price}</p>
 
-        <Nav variant='tabs' defaultActiveKey='link0'>
-          <Nav.Item>
-            <Nav.Link
-              onClick={() => {
-                setTap(0);
-              }}
-              eventKey='link0'
-            >
-              버튼0
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              onClick={() => {
-                setTap(1);
-              }}
-              eventKey='link1'
-            >
-              버튼1
-            </Nav.Link>
-          </Nav.Item>
-          <Nav.Item>
-            <Nav.Link
-              onClick={() => {
-                setTap(2);
-              }}
-              eventKey='link2'
-            >
-              버튼2
-            </Nav.Link>
-          </Nav.Item>
-        </Nav>
-        <TapContent tap={tap}></TapContent>
+          <button
+            className='btn btn-danger'
+            onClick={() => {
+              dispatch(
+                addItem({
+                  id: findProduct.id,
+                  name: findProduct.title,
+                  count: 1,
+                })
+              );
+              navigate('/cart');
+            }}
+          >
+            주문하기
+          </button>
+        </div>
       </div>
-    );
-  }
 
-  if (findProduct === false) {
-    return (
-      <div>
-        <div>찾으시는 상품이없습니다.</div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={'start ' + fade}>
-      <h2>제품 상세페이지입니다.</h2>
-      {shoes.map((item, i) => {
-        return (
-          <Col key={i}>
-            <ProductList shoes={shoes[i]} num={i}></ProductList>
-            {/* shoes[i] : shoes 데이터를 다 전달하는게 아니라 한개씩 전달 */}
-            <Btn bg='#2576f7'>
-              <Link
-                style={{ textDecorationLine: 'none', color: 'white' }}
-                to={'/detail/' + i}
-              >
-                자세히 보기
-              </Link>
-            </Btn>
-          </Col>
-        );
-      })}
+      <Nav variant='tabs' defaultActiveKey='link0'>
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTap(0);
+            }}
+            eventKey='link0'
+          >
+            상세정보
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTap(1);
+            }}
+            eventKey='link1'
+          >
+            리뷰
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTap(2);
+            }}
+            eventKey='link2'
+          >
+            Q&A
+          </Nav.Link>
+        </Nav.Item>
+        <Nav.Item>
+          <Nav.Link
+            onClick={() => {
+              setTap(3);
+            }}
+            eventKey='link3'
+          >
+            반품/교환정보
+          </Nav.Link>
+        </Nav.Item>
+      </Nav>
+      <TapContent tap={tap}></TapContent>
     </div>
   );
 }
@@ -238,7 +219,14 @@ function TapContent({ tap }) {
   // }
   return (
     <div className={'start ' + fade}>
-      {[<div>{재고}</div>, <div>내용1</div>, <div>내용2</div>][tap]}
+      {
+        [
+          <div>재고 : {재고}</div>,
+          <div>강동욱 : 너무 좋은 상품이에요!</div>,
+          <div>강동욱 : 신발사이즈는 5사이즈씩 나오나요?</div>,
+          <div>강동욱 : 260에서 270으로 교환했습니다~</div>,
+        ][tap]
+      }
     </div>
   );
 }

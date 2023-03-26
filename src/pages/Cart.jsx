@@ -12,18 +12,20 @@ export default function Cart() {
 
   return (
     <div>
-      {state.user.name} {state.user.age}의 장바구니
+      {state.user.name} 의 장바구니
+      <br></br>
+      나이 : {state.user.age}
       <button
         onClick={() => {
           dispatch(upAge(100));
         }}
       >
-        버튼
+        나이 100 up 버튼
       </button>
       <Table>
         <thead>
           <tr>
-            <th>#</th>
+            <th>#(상품id)</th>
             <th>상품명</th>
             <th>수량</th>
             <th>변경하기</th>
